@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Essay Percakapan Jepang</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            padding: 35px 30px;
+            max-width: 750px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .container::before {
+            content: '';
+            display: block;
+            height: 6px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            border-radius: 25px 25px 0 0;
+            margin: -35px -30px 20px -30px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .title { font-size: 16px; font-weight: 700; color: #1a1a2e; }
+        .title span { color: #e94560; }
+        .stats { display: flex; gap: 12px; font-size: 13px; font-weight: 600; color: #555; }
+        .stats div { background: #f0f0f0; padding: 3px 12px; border-radius: 20px; }
+        .stats .num { color: #e94560; font-size: 16px; }
+        .session-badge {
+            background: #9b59b6;
+            color: white;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+        }
+        .session-badge .sub { font-weight: 400; font-size: 12px; }
+        .progress-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 10px; margin-bottom: 15px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #e94560, #feca57); border-radius: 10px; transition: width 0.4s; width: 0%; }
+        .timer-container { text-align: center; margin-bottom: 12px; }
+        .timer {
+            display: inline-block;
+            font-size: 42px;
+            font-weight: 700;
+            color: #1a1a2e;
+            background: #f8f9fa;
+            padding: 4px 28px;
+            border-radius: 12px;
+            min-width: 90px;
+        }
+        .timer.warning { color: #e94560; animation: blink 0.8s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        .question-number { font-size: 12px; color: #888; text-align: center; margin-bottom: 4px; }
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 25px 18px;
+            background: #f8f9fa;
+            border-radius: 16px;
+            min-height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            border: 4px dashed #e94560;
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+        .session-info {
+            text-align: center;
+            font-size: 15px;
+            color: #e94560;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .writing-note {
+            text-align: center;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #856404;
+            font-weight: 600;
+        }
+        .auto-note {
+            text-align: center;
+            background: #e7f3ff;
+            border: 2px solid #2196f3;
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 13px;
+            color: #0d47a1;
+            font-weight: 600;
+        }
+        .result-screen { display: none; text-align: center; padding: 15px 0; }
+        .result-screen .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e94560, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 10px 40px rgba(233,69,96,0.3);
+        }
+        .result-screen .score-circle .score-text { font-size: 48px; font-weight: 800; color: white; }
+        .result-screen h2 { font-size: 22px; color: #e94560; margin-bottom: 5px; }
+        .result-screen h3 { font-size: 20px; color: #1a1a2e; margin-bottom: 5px; }
+        .result-screen p { color: #666; font-size: 15px; margin-bottom: 5px; }
+        .result-screen .info-box {
+            margin-top: 15px;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .answer-list {
+            margin-top: 20px;
+            text-align: left;
+            background: #f8f9fa;
+            padding: 15px 18px;
+            border-radius: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .answer-list .section-title {
+            font-weight: 700;
+            color: #e94560;
+            padding: 10px 0 6px 0;
+            border-bottom: 2px solid #e94560;
+            margin-bottom: 8px;
+            font-size: 15px;
+            position: sticky;
+            top: 0;
+            background: #f8f9fa;
+            z-index: 1;
+        }
+        .answer-list .item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+        .answer-list .item:last-child { border-bottom: none; }
+        .answer-list .item .soal {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+            white-space: pre-line;
+        }
+        .answer-list .item .jawab {
+            color: #e94560;
+            font-weight: 600;
+        }
+        .btn-restart {
+            margin-top: 15px;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #e94560, #c0392b);
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-restart:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(233,69,96,0.35); }
+        .start-screen { text-align: center; padding: 15px 0; }
+        .start-screen h1 { font-size: 22px; color: #1a1a2e; margin-bottom: 5px; line-height: 1.3; }
+        .start-screen h1 span { color: #e94560; }
+        .start-screen p { color: #666; font-size: 15px; margin-bottom: 5px; }
+        .start-screen .rules {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 12px 18px;
+            margin: 12px 0 20px;
+            text-align: left;
+            font-size: 14px;
+            color: #555;
+        }
+        .start-screen .rules li { margin: 4px 0; list-style: none; }
+        .hidden { display: none !important; }
+        .identitas-form {
+            text-align: center;
+            padding: 20px 0 10px 0;
+        }
+        .form-group {
+            margin-bottom: 14px;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #1a1a2e;
+            background: white;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: #e94560;
+            box-shadow: 0 0 0 3px rgba(233,69,96,0.15);
+        }
+        .btn-submit-identitas {
+            padding: 14px 50px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #e94560, #c0392b);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .btn-submit-identitas:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(233,69,96,0.35);
+        }
+        .btn-submit-identitas:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .error-msg {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+        }
+        .error-msg.show { display: block; }
+        .logo-pembuka {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 4px solid #e94560;
+            box-shadow: 0 8px 25px rgba(233,69,96,0.3);
+        }
+        .countdown-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            flex-direction: column;
+            color: white;
+        }
+        .countdown-overlay.show { display: flex; }
+        .countdown-overlay .big-num {
+            font-size: 120px;
+            font-weight: 800;
+            color: #feca57;
+            animation: pulse 1s infinite;
+        }
+        .countdown-overlay .text { font-size: 24px; margin-top: 20px; color: #fff; text-align: center; padding: 0 20px; }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+        @media (max-width: 500px) {
+            .logo-pembuka { width: 140px; height: 140px; }
+            .question-text { font-size: 16px; min-height: 100px; }
+            .timer { font-size: 34px; }
+            .start-screen h1 { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="countdown-overlay" id="countdownOverlay">
+    <div class="big-num" id="countdownNum">3</div>
+    <div class="text">Bersiap... Tulis jawaban di kertas!</div>
+</div>
+
+<div class="container" id="app">
+
+    <div class="start-screen" id="startScreen">
+        <img src="logo.png" alt="Logo Kuis" class="logo-pembuka">
+        <h1>Kuis Essay <span>Percakapan Jepang</span></h1>
+        <p>✍️ Tulis jawaban di kertas</p>
+        
+        <div class="identitas-form">
+            <div class="form-group">
+                <label for="inputNama">👤 Nama Lengkap</label>
+                <input type="text" id="inputNama" placeholder="Masukkan nama Anda...">
+            </div>
+            <div class="form-group">
+                <label for="inputKelas">🏫 Kelas</label>
+                <input type="text" id="inputKelas" placeholder="Masukkan kelas Anda...">
+            </div>
+            <div id="errorIdentitas" class="error-msg">⚠️ Nama dan kelas harus diisi!</div>
+            <button class="btn-submit-identitas" id="btnMulai" onclick="submitIdentitas()">Mulai Kuis 🚀</button>
+        </div>
+        
+        <div class="rules" style="margin-top:15px;">
+            <li>📝 <strong>30 soal</strong> (1 sesi)</li>
+            <li>💬 <strong>Isian percakapan</strong> (pilih kata yang tepat)</li>
+            <li>🔀 Soal <strong>DIACAK</strong></li>
+            <li>✍️ <strong>Tulis jawaban di kertas</strong> (tanpa input)</li>
+            <li>⏱️ <strong>25 detik</strong> per soal</li>
+            <li>⏭️ <strong>Auto next</strong> (tidak bisa skip manual)</li>
+            <li>📋 <strong>Kunci jawaban muncul di akhir</strong></li>
+        </div>
+    </div>
+
+    <div id="quizScreen" class="hidden">
+        <div class="header">
+            <div class="title">📚 Kuis <span>Percakapan Jepang</span></div>
+            <div class="stats">
+                <div>📌 <span class="num" id="currentNum">1</span>/<span id="totalNum">30</span></div>
+            </div>
+        </div>
+        
+        <div class="session-badge">
+            💬 <span class="sub">Tulis di Kertas ✍️</span>
+        </div>
+        
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="timer-container"><div class="timer" id="timerDisplay">25</div></div>
+        <div class="question-number" id="qNumber">Soal 1 dari 30</div>
+        <div class="session-info">✍️ Tulis jawaban yang tepat di kertas!</div>
+        
+        <div class="question-text" id="questionText">
+            <span id="mainText">Soal akan muncul di sini</span>
+        </div>
+        
+        <div class="writing-note">
+            ✍️ Tulis jawaban di kertas
+        </div>
+        
+        <div class="auto-note">
+            ⏭️ Soal akan otomatis lanjut saat waktu habis (tidak bisa skip manual)
+        </div>
+    </div>
+
+    <div class="result-screen" id="resultScreen">
+        <div class="score-circle"><div class="score-text">✓</div></div>
+        <h2 id="resultName">👤 Nama Siswa</h2>
+        <h3>Selesai! 🎉</h3>
+        <p id="resultDesc">Semua soal telah ditampilkan.</p>
+        <div class="info-box">
+            ✍️ Kunci jawaban ada di bawah.<br>
+            Silakan koreksi jawaban di kertas Anda.
+        </div>
+        <div class="answer-list" id="answerList"></div>
+        <button class="btn-restart" onclick="restartQuiz()">🔄 Ulangi Kuis</button>
+    </div>
+</div>
+
+<script>
+// ===== SOAL PERCAKAPAN (30 SOAL) =====
+const SOAL = [
+    {
+        soal: "山田：田中さん、（　　　）。ひこうきが おくれたんです。\n田中：いいえ、大丈夫ですよ。",
+        jawaban: "おまたせしました"
+    },
+    {
+        soal: "客：すみません、バナナを（　　　）。\n店員：はい、どうぞ。",
+        jawaban: "ください"
+    },
+    {
+        soal: "医者：（　　　）か。\n田中：昨日からちんちんが痛いんです。",
+        jawaban: "どうしたんですか"
+    },
+    {
+        soal: "店員：ご注文は（　　　）か。\n客：はい、これをください。",
+        jawaban: "おきまりですか"
+    },
+    {
+        soal: "客：（　　　）。注文をお願いします。\n店員：はい、かしこまりました。",
+        jawaban: "すみません"
+    },
+    {
+        soal: "A：日本語がとても上手ですね。\nB：いいえ、（　　　）、まだまだだめです。",
+        jawaban: "そんなことないです"
+    },
+    {
+        soal: "A：すみません、漢字の読み方が（　　　）。\nB：はい、説明しますね。",
+        jawaban: "よく わからないんですが"
+    },
+    {
+        soal: "医者：どうしましたか。\n田中：（　　　）。",
+        jawaban: "きのう から あたまが いたいんです"
+    },
+    {
+        soal: "B：ごめんください。\nA：どうぞ、入ってください。\nB：（　　　）。",
+        jawaban: "おじゃまします"
+    },
+    {
+        soal: "A：田中先生はまだ入院しているんです。\nB：そうですか、（　　　）。",
+        jawaban: "しんぱいですね"
+    },
+    {
+        soal: "田中：このIphone Pro Max 18、プレゼントです。\nイチャ：わあ、（　　　）。ありがとう。",
+        jawaban: "うれしい"
+    },
+    {
+        soal: "A：先週、旅行は（　　　）か。\nB：とても楽しかったです。",
+        jawaban: "どうでしたか"
+    },
+    {
+        soal: "A：明日、いっしょにパーティーに行きませんか。\nB：はい、行きましょう。\nA：（　　　）。\nB：じゃ、改札の前です。",
+        jawaban: "どこで あいますか"
+    },
+    {
+        soal: "A：さっき大きい地震があったね。\nB：うん、急に揺（ゆ）れて、（　　　）。",
+        jawaban: "びっくりします"
+    },
+    {
+        soal: "A：夏は好きですか。\nB：いいえ、夏はあまり好きじゃありません。（　　　）、",
+        jawaban: "にがてですから"
+    },
+    {
+        soal: "店員：（　　　）か。\n客：いいえ、持ち帰りでお願いします。",
+        jawaban: "ここでおめしあがりですか"
+    },
+    {
+        soal: "A：財布がおとしましたよ。\nB：あ、（　　　）、ありがとうございます。",
+        jawaban: "すみません"
+    },
+    {
+        soal: "A：コーヒーはいかがですか。\nB：はい、ありがとうございます。（　　　）。",
+        jawaban: "いただきます"
+    },
+    {
+        soal: "【電車が込んでいて、おばあさんが立っています。私は座っています。】\nA：おばあさん、（　　　）。\nB：ありがとうございます。",
+        jawaban: "どうぞ"
+    },
+    {
+        soal: "A：家の前ですよ。\nB：はい、（　　　）。ありがとうございます。",
+        jawaban: "ここでいいです"
+    },
+    {
+        soal: "A：すみません、メールを確認してくれませんか。（　　　）。\nB：いいですよ、じゃ、見せてください。",
+        jawaban: "じしんがありません"
+    },
+    {
+        soal: "A：英語が（　　　）か。\nB：はい、少しできます。",
+        jawaban: "できますか"
+    },
+    {
+        soal: "店員：（　　　）か。\n客：三人です。",
+        jawaban: "なんめいさまですか"
+    },
+    {
+        soal: "A：毎日雨が降って、（　　　）。\nB：そうですね、大変ですね。",
+        jawaban: "いやになりますね"
+    },
+    {
+        soal: "A：健康のために、（　　　）か。\nB：毎日運動するようにしています。",
+        jawaban: "どうすればいいですか"
+    },
+    {
+        soal: "A：荷物を持ちましょうか。\nB：（　　　）。助かります。",
+        jawaban: "ありがとうございます"
+    },
+    {
+        soal: "A：パーティーの飲み物は（　　　）か。\nB：私が買いに行きます。",
+        jawaban: "どう しますか"
+    },
+    {
+        soal: "A：コーヒーは（　　　）か。\nB：はい、お願いします。",
+        jawaban: "いかがですか"
+    },
+    {
+        soal: "A：あ、いたい！\nB：（　　　）。足は大丈夫ですか。\nA：いいえ、大丈夫です。\nB：バスが混（こ）んでいますね。",
+        jawaban: "すみません"
+    }
+];
+
+// ===== VARIABLES =====
+let questions = [];
+let currentIndex = 0;
+let timer = 25;
+let timerInterval = null;
+let isAnswered = false;
+const TIME_PER_QUESTION = 25;
+const TOTAL = SOAL.length;
+let userNama = '';
+let userKelas = '';
+
+// ===== DOM =====
+const startScreen = document.getElementById('startScreen');
+const quizScreen = document.getElementById('quizScreen');
+const resultScreen = document.getElementById('resultScreen');
+const mainText = document.getElementById('mainText');
+const timerDisplay = document.getElementById('timerDisplay');
+const currentNum = document.getElementById('currentNum');
+const totalNum = document.getElementById('totalNum');
+const progressFill = document.getElementById('progressFill');
+const qNumber = document.getElementById('qNumber');
+const resultName = document.getElementById('resultName');
+const resultDesc = document.getElementById('resultDesc');
+const inputNama = document.getElementById('inputNama');
+const inputKelas = document.getElementById('inputKelas');
+const btnMulai = document.getElementById('btnMulai');
+const errorIdentitas = document.getElementById('errorIdentitas');
+const countdownOverlay = document.getElementById('countdownOverlay');
+const countdownNum = document.getElementById('countdownNum');
+const answerList = document.getElementById('answerList');
+
+// ===== SHUFFLE =====
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// ===== BUILD QUESTIONS (DIACAK) =====
+function buildQuestions() {
+    return shuffle(SOAL).map(item => ({
+        soal: item.soal,
+        jawab: item.jawaban
+    }));
+}
+
+// ===== LOGIC =====
+function submitIdentitas() {
+    const nama = inputNama.value.trim();
+    const kelas = inputKelas.value.trim();
+    
+    if (nama === '' || kelas === '') {
+        errorIdentitas.classList.add('show');
+        return;
+    }
+    
+    errorIdentitas.classList.remove('show');
+    userNama = nama;
+    userKelas = kelas;
+    btnMulai.disabled = true;
+    btnMulai.textContent = '⏳ Memuat...';
+    
+    setTimeout(() => {
+        startCountdown();
+    }, 500);
+}
+
+function startCountdown() {
+    let count = 3;
+    countdownNum.textContent = count;
+    countdownOverlay.classList.add('show');
+    
+    const countInterval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countdownNum.textContent = count;
+        } else if (count === 0) {
+            countdownNum.textContent = 'Mulai!';
+        } else {
+            clearInterval(countInterval);
+            countdownOverlay.classList.remove('show');
+            startQuiz();
+        }
+    }, 1000);
+}
+
+function startQuiz() {
+    questions = buildQuestions();
+    currentIndex = 0;
+    startScreen.classList.add('hidden');
+    quizScreen.classList.remove('hidden');
+    resultScreen.style.display = 'none';
+    loadQuestion();
+}
+
+function loadQuestion() {
+    if (currentIndex >= questions.length) { endQuiz(); return; }
+
+    const q = questions[currentIndex];
+    
+    timer = TIME_PER_QUESTION;
+    timerDisplay.textContent = timer;
+    timerDisplay.classList.remove('warning');
+
+    mainText.textContent = q.soal;
+    
+    qNumber.textContent = `Soal ${currentIndex + 1} dari ${TOTAL}`;
+    currentNum.textContent = currentIndex + 1;
+    totalNum.textContent = TOTAL;
+    progressFill.style.width = ((currentIndex) / TOTAL * 100) + '%';
+
+    isAnswered = false;
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timer--;
+        timerDisplay.textContent = timer;
+        if (timer <= 5) timerDisplay.classList.add('warning');
+        if (timer <= 0) {
+            clearInterval(timerInterval);
+            if (!isAnswered) {
+                isAnswered = true;
+                nextQuestion();
+            }
+        }
+    }, 1000);
+}
+
+function nextQuestion() {
+    isAnswered = true;
+    clearInterval(timerInterval);
+    currentIndex++;
+    
+    if (currentIndex >= questions.length) { 
+        endQuiz(); 
+    } else { 
+        loadQuestion(); 
+    }
+}
+
+function endQuiz() {
+    clearInterval(timerInterval);
+    
+    quizScreen.classList.add('hidden');
+    resultScreen.style.display = 'block';
+    
+    resultName.textContent = `👤 ${userNama} (${userKelas})`;
+    resultDesc.textContent = `Semua ${TOTAL} soal telah ditampilkan. Silakan koreksi jawaban di kertas.`;
+
+    renderAnswerList();
+}
+
+function renderAnswerList() {
+    answerList.innerHTML = '';
+    
+    const title = document.createElement('div');
+    title.className = 'section-title';
+    title.textContent = `💬 Kunci Jawaban Percakapan (${TOTAL} soal)`;
+    answerList.appendChild(title);
+    
+    questions.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<div class="soal">${i + 1}. ${item.soal}</div><div class="jawab">✅ Jawaban: ${item.jawab}</div>`;
+        answerList.appendChild(div);
+    });
+}
+
+function restartQuiz() {
+    resultScreen.style.display = 'none';
+    startScreen.classList.remove('hidden');
+    quizScreen.classList.add('hidden');
+    currentIndex = 0;
+    clearInterval(timerInterval);
+    inputNama.value = '';
+    inputKelas.value = '';
+    userNama = '';
+    userKelas = '';
+    btnMulai.disabled = false;
+    btnMulai.textContent = 'Mulai Kuis 🚀';
+}
+</script>
+
+</body>
+</html>
