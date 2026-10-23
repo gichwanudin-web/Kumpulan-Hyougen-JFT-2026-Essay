@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuis Essay Percakapan Jepang</title>
+    <title>Kuis Hyougen JFT 2026</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -318,7 +318,7 @@
 
     <div class="start-screen" id="startScreen">
         <img src="logo.png" alt="Logo Kuis" class="logo-pembuka">
-        <h1>Kuis Essay <span>Percakapan Jepang</span></h1>
+        <h1>Kuis Hyougen <span>JFT 2026</span></h1>
         <p>✍️ Tulis jawaban di kertas</p>
         
         <div class="identitas-form">
@@ -335,7 +335,7 @@
         </div>
         
         <div class="rules" style="margin-top:15px;">
-            <li>📝 <strong>30 soal</strong> (1 sesi)</li>
+            <li>📝 <strong>31 soal</strong> (1 sesi)</li>
             <li>💬 <strong>Isian percakapan</strong> (pilih kata yang tepat)</li>
             <li>🔀 Soal <strong>DIACAK</strong></li>
             <li>✍️ <strong>Tulis jawaban di kertas</strong> (tanpa input)</li>
@@ -349,7 +349,7 @@
         <div class="header">
             <div class="title">📚 Kuis <span>Percakapan Jepang</span></div>
             <div class="stats">
-                <div>📌 <span class="num" id="currentNum">1</span>/<span id="totalNum">30</span></div>
+                <div>📌 <span class="num" id="currentNum">1</span>/<span id="totalNum">31</span></div>
             </div>
         </div>
         
@@ -359,7 +359,7 @@
         
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
         <div class="timer-container"><div class="timer" id="timerDisplay">25</div></div>
-        <div class="question-number" id="qNumber">Soal 1 dari 30</div>
+        <div class="question-number" id="qNumber">Soal 1 dari 31</div>
         <div class="session-info">✍️ Tulis jawaban yang tepat di kertas!</div>
         
         <div class="question-text" id="questionText">
@@ -390,7 +390,7 @@
 </div>
 
 <script>
-// ===== SOAL PERCAKAPAN (30 SOAL) =====
+// ===== SOAL HYOUGEN (31 SOAL) =====
 const SOAL = [
     {
         soal: "山田：田中さん、（　　　）。ひこうきが おくれたんです。\n田中：いいえ、大丈夫ですよ。",
@@ -507,6 +507,10 @@ const SOAL = [
     {
         soal: "A：あ、いたい！\nB：（　　　）。足は大丈夫ですか。\nA：いいえ、大丈夫です。\nB：バスが混（こ）んでいますね。",
         jawaban: "すみません"
+    } 
+    {
+        soal: "A：富士山はどうでしたか！\nB: きれいでしたよ。(      )行ってください!\nA：そうですか。じゃあ、今度行ってみます。",
+        jawaban: "ぜひ"
     }
 ];
 
