@@ -339,7 +339,7 @@
             <li>💬 <strong>Isian percakapan</strong> (pilih kata yang tepat)</li>
             <li>🔀 Soal <strong>DIACAK</strong></li>
             <li>✍️ <strong>Tulis jawaban di kertas</strong> (tanpa input)</li>
-            <li>⏱️ <strong>25 detik</strong> per soal</li>
+            <li>⏱️ <strong>30 detik</strong> per soal</li>
             <li>⏭️ <strong>Auto next</strong> (tidak bisa skip manual)</li>
             <li>📋 <strong>Kunci jawaban muncul di akhir</strong></li>
         </div>
@@ -358,7 +358,7 @@
         </div>
         
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="timer-container"><div class="timer" id="timerDisplay">25</div></div>
+        <div class="timer-container"><div class="timer" id="timerDisplay">30</div></div>
         <div class="question-number" id="qNumber">Soal 1 dari 31</div>
         <div class="session-info">✍️ Tulis jawaban yang tepat di kertas!</div>
         
@@ -517,10 +517,10 @@ const SOAL = [
 // ===== VARIABLES =====
 let questions = [];
 let currentIndex = 0;
-let timer = 25;
+let timer = 30;
 let timerInterval = null;
 let isAnswered = false;
-const TIME_PER_QUESTION = 25;
+const TIME_PER_QUESTION = 30;
 const TOTAL = SOAL.length;
 let userNama = '';
 let userKelas = '';
